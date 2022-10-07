@@ -192,13 +192,13 @@ function countingSort(array, lower_bound = false, upper_bound = false, desc = fa
 }
 
 
-let size = 100000;
+let size = 50000;
 let array = generateArray(size, -10000, 10000);
-//console.log(`Before bubbleSort: ${array}`);
+console.log(`Before bubbleSort: ${array}`);
 let start = performance.now();
 bubbleSort(array);
 let stop = performance.now();
-//console.log(`After bubbleSort: ${array}`);
+console.log(`After bubbleSort: ${array}`);
 console.log(`Time (bubbleSort): ${parseFloat((stop - start) / 1000).toFixed(3)}s.`);
 console.log();
 

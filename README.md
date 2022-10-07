@@ -1,11 +1,11 @@
 # Algorithms and Data Structures collection
 
 ## Sorting algorithms
-* **bubble sort** (.js, .py)
-* **selection sort** (.js, .py)
-* **insertion sort** (.js, .py)
+* **bubble sort** (.js, .py, .cpp)
+* **selection sort** (.js, .py, .cpp)
+* **insertion sort** (.js, .py, .cpp)
 * **merge sort** (.js, .py)
-* **quick sort** (.js, .py)
+* **quick sort** (.js, .py, .cpp)
 * **counting sort** (.js. py)
 
 ## Mathematical functions

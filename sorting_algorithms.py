@@ -137,7 +137,7 @@ def countingSort(array, lower_bound = False, upper_bound = False, desc = False):
 
 
 if __name__ == "__main__":
-    input_size = 10**4
+    input_size = 50000
 
     array = [randint(-10000, 10000) for _ in range(input_size)]
     #print("Before bubbleSort: {}".format(array))

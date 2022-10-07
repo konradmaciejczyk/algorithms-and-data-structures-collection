@@ -96,6 +96,22 @@ def rFactorial(n):
     else:
         return rFactorial(n-1) * n
 
+#=============HORNER=============
+def horner(cooficients, root):
+    aux = cooficients[0]
+    n = len(cooficients)
+    result = [aux]
+
+    i = 0
+    while i <= n -2:
+        result.append(result[i] * root + cooficients[i+1])
+        i += 1
+
+    remainder = result[n - 1]
+    result.pop(len(result) - 1)
+
+    return (result, remainder)
+
 
 if __name__ == "__main__":
     a, b = 3, 9
