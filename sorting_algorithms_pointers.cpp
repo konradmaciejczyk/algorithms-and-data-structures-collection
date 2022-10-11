@@ -56,52 +56,68 @@ void fillWith0(int *array, int n){
 
 //==========================BUBBLE SORT==========================
 void bubbleSort(int *array, int n){
-    int i, aux;
+    int *array_ptr_buff = array;
+    int *array_next{array+1};
 
-    for(n; n > -1; n--){
-        for(i=0; i<n-1; i++){
-            if(array[i] > array[i+1]){
-                aux = array[i];
-                array[i] = array[i+1];
-                array[i+1] = aux;
+    for(n; n>-1; n--){
+        for(int i{0}; i<n-1; i++){
+            if(*array > *array_next){
+                int aux = *array;
+                *array = *array_next;
+                *array_next = aux;
             }
+            array++;
+            array_next++;
         }
+
+        array = array_ptr_buff;
+        array_next = array+1;
     }
 }
 
 //==========================INSERTION SORT==========================
 void insertionSort(int *array, int n){
     int i, j, aux;
-
-    for(i=0; i<n-1; i++){
+    int *j_ptr{}, *j_prev_ptr{};
+    
+    for(i = 0; i<n-1; i++){
         j = i + 1;
-        while(j > 0 && array[j] < array[j - 1]){
-            aux = array[j];
-            array[j] = array[j-1];
-            array[j-1] = aux;
+        j_ptr = (array + j);
+        j_prev_ptr = j_ptr - 1;
+        while(j > 0 && *j_ptr < *j_prev_ptr){
+            aux = *j_ptr;
+            *j_ptr = *j_prev_ptr;
+            *j_prev_ptr = aux;
 
             j--;
+            j_ptr--;
+            j_prev_ptr--;
         }
     }
 }
 
 //==========================SELECTION SORT==========================
 void selectionSort(int *array, int n){
-    int j, aux;
-
-    for(int i{0}; i<n; i++){
-        j = i+1;
-        aux = i;
-        for(j; j<n; j++){
-            if(array[j]<array[aux]){
-                aux = j;
+    int *i_ptr = array;
+    int *j_ptr{};
+    int *aux_ptr{};
+    int i, j, buff;
+    for(i = 0; i<n; i++){
+        aux_ptr = i_ptr;
+        j_ptr = i_ptr + 1;
+        for(j = i+1; j<n; j++){
+            if(*j_ptr < *aux_ptr){
+                aux_ptr = j_ptr;
             }
+            j_ptr++;
         }
 
-        int buff = array[aux];
-        array[aux] = array[i];
-        array[i] = buff;
-    }
+        buff = *i_ptr;
+        *i_ptr = *aux_ptr;
+        *aux_ptr = buff;
+
+        i_ptr++;
+    }    
 }
 
 //==========================MERGE SORT==========================
@@ -113,32 +129,34 @@ void merge(int *array, int start, int mid, int end){
     int *right_array{new int[m]};
 
     for(int i=0; i<n; i++){
-        left_array[i] = array[start + i];
+        *(left_array + i) = *(array + start + i);
     }
 
     for(int j=0; j<m; j++){
-        right_array[j] = array[mid + 1 + j];
+        *(right_array + j) = *(array + mid + 1 + j);
     }
 
-    int i=0; int j = 0; int k = start;
+    int i=0; int j = 0;
     while(i < n && j < m){
-        if(left_array[i] < right_array[j]){
-            array[k] = left_array[i];
-            i++; k++;
+        if(*(left_array + i) < *(right_array + j)){
+            *(array + start) = *(left_array + i);
+            i++;
         }else{
-            array[k] = right_array[j];
-            j++; k++;
+            *(array + start) = *(right_array + j);
+            j++;
         }
+
+        array++;
     }
 
     while(i < n){
-        array[k] = left_array[i];
-        i++; k++;
+        *(array + start) = *(left_array + i);
+        i++; array++;
     }
 
     while(j < m){
-        array[k] = right_array[j];
-        j++; k++;
+        *(array + start) = *(right_array + j);
+        j++; array++;
     }
 
     delete [] left_array; left_array = nullptr;
@@ -151,41 +169,6 @@ void mergeSort(int * array, int l, int r){
         mergeSort(array, l, mid);
         mergeSort(array, mid + 1, r);
         merge(array, l, mid, r);
-    }
-}
-
-//==========================QUICK SORT==========================
-int partition(int *array, int p, int q){
-    int pivot = array[(p + q) / 2];
-    p--;
-    q++;
-
-    while(true){
-        p++;
-        while(array[p] < pivot){
-            p++;
-        }
-
-        q--;
-        while(array[q] > pivot){
-            q--;
-        }
-
-        if(p >= q){
-            return q;
-        }
-
-        int aux = array[p];
-        array[p] = array[q];
-        array[q] = aux;
-    }
-}
-
-void quickSort(int *array, int p, int q){
-    if(p < q){
-        int pivot = partition(array, p, q);
-        quickSort(array, p, pivot);
-        quickSort(array, pivot + 1, q);
     }
 }
 
@@ -202,24 +185,28 @@ void countingSort(int *array, int n, bool desc=false){
     int *count_array{new int[count_length]};
     fillWith0(buff_array, n);
 
+    int *count_array_ptr = count_array;
     for(i = 0; i<n; i++){
-        count_array[array[i] - bias]++;
+        ++*(count_array_ptr + array[i] - bias) ;
     }
 
-    for(i = 1; i<count_length; i++){
-        count_array[i] = count_array[i] + count_array[i-1];
-    }
-    
+    count_array_ptr = count_array +1;
+    int *count_array_prev_ptr = count_array;
+    for(i = 0; i<count_length; i++){
+        *(count_array_ptr + i) += *(count_array_prev_ptr + i);
+    }    
+    count_array_prev_ptr = nullptr;
+
+    count_array_ptr = nullptr;
     for(i = n-1; i > -1; i--){
-        int position = --count_array[array[i] - bias];
-        buff_array[position] = array[i];
-
+        *(buff_array + --*(count_array + *(array + i) - bias)) = *(array + i);
     }
 
+    count_array_ptr = nullptr;
     delete count_array; count_array = nullptr;
 
     for(i = 0; i < n; i++){
-        array[i] = buff_array[i];
+        *(array + i) = *(buff_array + i);
     }
 
     delete buff_array; buff_array = nullptr;
@@ -228,9 +215,9 @@ void countingSort(int *array, int n, bool desc=false){
         int p{0}, q{n-1};
         int buff;
         while(p < q){
-            buff = array[p];
-            array[p] = array[q];
-            array[q] = buff;
+            buff = *(array + p);
+            *(array + p) = *(array + q);
+            *(array + q) = buff;
 
             p++; q--;
         }
@@ -300,26 +287,6 @@ int main(){
 
     // time = (double) (stop - start) / CLOCKS_PER_SEC;
     // std::cout<<std::endl<<std::setw(40)<<std::left<<"Time (selectionSort): "<<time<<"s."<<std::endl<<std::endl;
-
-    // delete [] array; array = nullptr;
-
-    //==========================QUICK SORT==========================
-    // int *array = new int[size];
-
-    // generateArray(array, size, 1000);
-
-    // // std::cout<<std::setw(40)<<std::left<<"Unsorted array: ";
-    // // printArray(array, size);
-
-    // start = clock();
-    // quickSort(array, 0, size - 1);
-    // stop = clock();
-
-    // // std::cout<<std::endl<<std::setw(40)<<std::left<<"Array sorted with quickSort: ";
-    // // printArray(array, size);
-
-    // time = (double) (stop - start) / CLOCKS_PER_SEC;
-    // std::cout<<std::endl<<std::setw(40)<<std::left<<"Time (quickSort): "<<time<<"s."<<std::endl<<std::endl;
 
     // delete [] array; array = nullptr;
 
