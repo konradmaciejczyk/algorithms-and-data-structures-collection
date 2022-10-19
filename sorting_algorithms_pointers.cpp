@@ -54,44 +54,15 @@ void fillWith0(int *array, int n){
     }
 }
 
-//==========================BUBBLE SORT==========================
-void bubbleSort(int *array, int n){
-    int *array_ptr_buff = array;
-    int *array_next{array+1};
-
-    for(n; n>-1; n--){
-        for(int i{0}; i<n-1; i++){
-            if(*array > *array_next){
-                int aux = *array;
-                *array = *array_next;
-                *array_next = aux;
+//==========================SHELL SORT==========================
+void shellSort(int *array, int n){
+    for(int gap = n/2; gap > 0; gap /= 2){
+        for(int i = gap; i < n; i++){
+            for(int j = i - gap; (j > -1) && (*(array + j) > *(array + j + gap)); j--){
+                int aux = *(array + j);
+                *(array + j) = *(array + j + gap);
+                *(array + j + gap) = aux;
             }
-            array++;
-            array_next++;
-        }
-
-        array = array_ptr_buff;
-        array_next = array+1;
-    }
-}
-
-//==========================INSERTION SORT==========================
-void insertionSort(int *array, int n){
-    int i, j, aux;
-    int *j_ptr{}, *j_prev_ptr{};
-    
-    for(i = 0; i<n-1; i++){
-        j = i + 1;
-        j_ptr = (array + j);
-        j_prev_ptr = j_ptr - 1;
-        while(j > 0 && *j_ptr < *j_prev_ptr){
-            aux = *j_ptr;
-            *j_ptr = *j_prev_ptr;
-            *j_prev_ptr = aux;
-
-            j--;
-            j_ptr--;
-            j_prev_ptr--;
         }
     }
 }
@@ -225,7 +196,7 @@ void countingSort(int *array, int n, bool desc=false){
 }
 
 int main(){
-    int size = 10000000;
+    int size = 150000;
     clock_t start, stop;
     double time;
 
@@ -270,6 +241,26 @@ int main(){
 
     // delete [] array; array = nullptr;
 
+    //==========================SHELL SORT==========================
+    int *array = new int[size];
+
+    generateArray(array, size, 1000);
+
+    // std::cout<<std::setw(40)<<std::left<<"Unsorted array: ";
+    // printArray(array, size);
+
+    start = clock();
+    shellSort(array, size);
+    stop = clock();
+
+    // std::cout<<std::endl<<std::setw(40)<<std::left<<"Array sorted with shellSort: ";
+    // printArray(array, size);
+
+    time = (double) (stop - start) / CLOCKS_PER_SEC;
+    std::cout<<std::endl<<std::setw(40)<<std::left<<"Time (shellSort): "<<time<<"s."<<std::endl<<std::endl;
+
+    delete [] array; array = nullptr;
+
     //==========================SELECTION SORT==========================
     // array = new int[size];
 
@@ -311,24 +302,24 @@ int main(){
     // delete [] array; array = nullptr;
 
     //==========================MERGE SORT==========================
-    int *array = new int[size];
+    // int *array = new int[size];
 
-    generateArray(array, size, 100);
+    // generateArray(array, size, 100);
 
-    // std::cout<<std::setw(40)<<std::left<<"Unsorted array: ";
-    // printArray(array, size);
+    // // std::cout<<std::setw(40)<<std::left<<"Unsorted array: ";
+    // // printArray(array, size);
 
-    start = clock();
-    mergeSort(array, 0, size-1);
-    stop = clock();
+    // start = clock();
+    // mergeSort(array, 0, size-1);
+    // stop = clock();
 
-    // std::cout<<std::endl<<std::setw(40)<<std::left<<"Array sorted with mergeSort: ";
-    // printArray(array, size);
+    // // std::cout<<std::endl<<std::setw(40)<<std::left<<"Array sorted with mergeSort: ";
+    // // printArray(array, size);
 
-    time = (double) (stop - start) / CLOCKS_PER_SEC;
-    std::cout<<std::endl<<std::setw(40)<<std::left<<"Time (mergeSort): "<<time<<"s."<<std::endl<<std::endl;
+    // time = (double) (stop - start) / CLOCKS_PER_SEC;
+    // std::cout<<std::endl<<std::setw(40)<<std::left<<"Time (mergeSort): "<<time<<"s."<<std::endl<<std::endl;
 
-    delete [] array; array = nullptr;
+    // delete [] array; array = nullptr;
 
     return 0;    
 }
