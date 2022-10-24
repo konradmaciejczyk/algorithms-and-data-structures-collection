@@ -3,4 +3,5 @@
 *.obj
 *.as
 *.txt
-
+*.class
+/.vscode

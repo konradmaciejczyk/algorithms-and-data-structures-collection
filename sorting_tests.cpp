@@ -6,6 +6,10 @@
 #include <algorithm>
 #include "sorting_algorithms/sorting_algorithms.h"
 
+enum Algorithms : char {
+    BUBBLE_SORT, SELECTION_SORT, INSERTION_SORT, SHELL_SORT, MERGE_SORT, QUICK_SORT, COUNTING_SORT, RADIX_SORT, COCKTAIL_SORT
+};
+
 void generateArray(int *array, int lower_bound, int upper_bound, int size){
     srand(time(NULL));    
     for(int i{0}; i<size; i++){
@@ -50,19 +54,7 @@ void copyArray(int *array_a, int *array_b, int size){
     }
 }
 
-struct{
-    int BUBBLE_SORT = 0;
-    int SELECTION_SORT = 1;
-    int INSERTION_SORT = 2;
-    int SHELL_SORT = 3;
-    int MERGE_SORT = 4;
-    int QUICK_SORT = 5;
-    int COUNTING_SORT = 6;
-    int RADIX_SORT = 7;
-    int COCKTAIL_SORT = 8;
-} Algorithms;
-
-double singleTest(const int algorithm, int lower_bound = -10000, int upper_bound = 10000, int size = 20, bool check_correctness = false, bool verbose = true){
+double singleTest(Algorithms algorithm, int lower_bound = -10000, int upper_bound = 10000, int size = 20, bool check_correctness = false, bool verbose = true){
     clock_t start, stop;
     double delta_time;
     std::string algorithm_name;
@@ -83,55 +75,55 @@ double singleTest(const int algorithm, int lower_bound = -10000, int upper_bound
     }    
 
     switch(algorithm){
-        case 0:{
+        case Algorithms::BUBBLE_SORT:{
             algorithm_name = "bubble sort";
             start = clock();
             bubbleSort(array, size);
             stop = clock();
             break;
-        } case 1:{
+        } case Algorithms::SELECTION_SORT:{
             algorithm_name = "selection sort";
             start = clock();
             selectionSort(array, size);
             stop = clock();
             break;
-        } case 2:{
+        } case Algorithms::INSERTION_SORT:{
             algorithm_name = "insertion sort";
             start = clock();
             insertionSort(array, size);
             stop = clock();
             break;
-        } case 3:{
+        } case Algorithms::SHELL_SORT:{
             algorithm_name = "shell sort";
             start = clock();
             shellSort(array, size);
             stop = clock();
             break;
-        } case 4:{
+        } case Algorithms::MERGE_SORT:{
             algorithm_name = "merge sort";
             start = clock();
             mergeSort(array, 0, size - 1);
             stop = clock();
             break;
-        } case 5:{
+        } case Algorithms::QUICK_SORT:{
             algorithm_name = "quick sort";
             start = clock();
             quickSort(array, 0, size - 1);
             stop = clock();
             break;
-        } case 6:{
+        } case Algorithms::COUNTING_SORT:{
             algorithm_name = "counting sort";
             start = clock();
             countingSort(array, size);
             stop = clock();
             break;
-        } case 7:{
+        } case Algorithms::RADIX_SORT:{
             algorithm_name = "radix sort";
             start = clock();
             radixSort(array, size);
             stop = clock();
             break;
-        } case 8:{
+        } case Algorithms::COCKTAIL_SORT:{
             algorithm_name = "cocktail sort";
             start = clock();
             cocktailSort(array, size);
@@ -183,20 +175,20 @@ void correctnessTest(){
          for(int j=0; j < 25; j += 3){
             lower_bound = data[j]; upper_bound = data[j + 1]; size = data[j + 2];
 
-            result = singleTest(Algorithms.BUBBLE_SORT, lower_bound, upper_bound, size, check_correctness, verbose);
-            result = singleTest(Algorithms.SELECTION_SORT, lower_bound, upper_bound, size, check_correctness, verbose);
-            result = singleTest(Algorithms.INSERTION_SORT, lower_bound, upper_bound, size, check_correctness, verbose);            
-            result = singleTest(Algorithms.SHELL_SORT, lower_bound, upper_bound, size, check_correctness, verbose);
-            result = singleTest(Algorithms.MERGE_SORT, lower_bound, upper_bound, size, check_correctness, verbose);
-            result = singleTest(Algorithms.QUICK_SORT, lower_bound, upper_bound, size, check_correctness, verbose);
-            result = singleTest(Algorithms.COUNTING_SORT, lower_bound, upper_bound, size, check_correctness, verbose);
-            result = singleTest(Algorithms.RADIX_SORT, lower_bound, upper_bound, size, check_correctness, verbose);
-            result = singleTest(Algorithms.COCKTAIL_SORT, lower_bound, upper_bound, size, check_correctness, verbose);
+            result = singleTest(Algorithms::BUBBLE_SORT, lower_bound, upper_bound, size, check_correctness, verbose);
+            result = singleTest(Algorithms::SELECTION_SORT, lower_bound, upper_bound, size, check_correctness, verbose);
+            result = singleTest(Algorithms::INSERTION_SORT, lower_bound, upper_bound, size, check_correctness, verbose);            
+            result = singleTest(Algorithms::SHELL_SORT, lower_bound, upper_bound, size, check_correctness, verbose);
+            result = singleTest(Algorithms::MERGE_SORT, lower_bound, upper_bound, size, check_correctness, verbose);
+            result = singleTest(Algorithms::QUICK_SORT, lower_bound, upper_bound, size, check_correctness, verbose);
+            result = singleTest(Algorithms::COUNTING_SORT, lower_bound, upper_bound, size, check_correctness, verbose);
+            result = singleTest(Algorithms::RADIX_SORT, lower_bound, upper_bound, size, check_correctness, verbose);
+            result = singleTest(Algorithms::COCKTAIL_SORT, lower_bound, upper_bound, size, check_correctness, verbose);
         }
     }
 }
 
-void performanceTest(int algorithm, const std::string &algorithm_name, int dataset[], int dataset_size, int probs_per_test = 3){
+void performanceTest(Algorithms algorithm, const std::string &algorithm_name, int *dataset, int dataset_size, int probs_per_test = 3){
     std::cout<<"Performance test for "+ algorithm_name +" ("<<probs_per_test<<" probs per test)."<<std::endl;
 
     int lower_bound, upper_bound, size; double duration;
@@ -219,25 +211,47 @@ void performanceTest(int algorithm, const std::string &algorithm_name, int datas
     std::cout<<std::endl;
 }
 
-int main(){    
-    correctnessTest();
-    // int dataset[18] {-10000, 10000, 1000, -10000, 10000, 20000, -10000, 10000, 40000, -10000, 10000, 60000, -10000, 10000, 80000, -10000, 10000, 100000};
+int main(int argc, char *argv[]){
 
-    // performanceTest(0, "bubbleSort", dataset, std::size(dataset), 2);
-    // performanceTest(1, "selectionSort", dataset, std::size(dataset), 2);
-    // performanceTest(2, "insertionSort", dataset, std::size(dataset), 2);
-    // performanceTest(8, "cocktailSort", dataset, std::size(dataset), 2);
+    if(argc == 1){
+        std::cout<<std::endl;
+        std::cout<<"USAGE:"<<std::endl<<"Pass \"correctnessTest\" or \"performanceTest\" as a command line parameter."<<std::endl<<std::endl;
 
-    // int dataset[18] {-10000, 10000, 1000, -10000, 10000, 60000, -10000, 10000, 120000, -10000, 10000, 180000, -10000, 10000, 240000, -10000, 10000, 300000};
-    // performanceTest(3, "shellSort", dataset, std::size(dataset), 2);
+        return 0;
+    }else if(argc > 2){
+        std::cout<<std::endl;
+        std::cout<<"USAGE:"<<std::endl<<"Pass \"correctnessTest\" or \"performanceTest\" as a command line parameter."<<std::endl<<std::endl;
 
-    // int dataset[18] {-10000, 10000, 1000, -10000, 10000, 5000000, -10000, 10000, 10000000, -10000, 10000, 15000000, -10000, 10000, 20000000, -10000, 10000, 25000000};
-    // performanceTest(4, "mergeSort", dataset, std::size(dataset), 2);
-    // performanceTest(5, "quickSort", dataset, std::size(dataset), 2);
-    // performanceTest(6, "countingSort", dataset, std::size(dataset), 2);
-    // performanceTest(7, "radixSort", dataset, std::size(dataset), 2);
+        return 0;
+    }
 
+    if (std::string(*(argv + 1)) == "correctnessTest"){
+        correctnessTest();
+    }else if (std::string(*(argv + 1)) == "performanceTest"){
+        int dataset_size = 18;
+        int probs_per_test = 1;
+
+        int *dataset{new int [18] {-10000, 10000, 1000, -10000, 10000, 20000, -10000, 10000, 40000, -10000, 10000, 60000, -10000, 10000, 80000, -10000, 10000, 100000}};
+        performanceTest(Algorithms::BUBBLE_SORT, "bubbleSort", dataset, dataset_size, probs_per_test);
+        performanceTest(Algorithms::SELECTION_SORT, "selectionSort", dataset, dataset_size, probs_per_test);
+        performanceTest(Algorithms::INSERTION_SORT, "insertionSort", dataset, dataset_size, probs_per_test);
+        performanceTest(Algorithms::COCKTAIL_SORT, "cocktailSort", dataset, dataset_size, probs_per_test);
+        delete [] dataset; dataset = nullptr;
+
+        dataset = new int[18] {-10000, 10000, 1000, -10000, 10000, 60000, -10000, 10000, 120000, -10000, 10000, 180000, -10000, 10000, 240000, -10000, 10000, 300000};
+        performanceTest(Algorithms::SHELL_SORT, "shellSort", dataset, dataset_size, probs_per_test);        
+        delete [] dataset; dataset = nullptr;
+
+        dataset = new int[18] {-10000, 10000, 1000, -10000, 10000, 5000000, -10000, 10000, 10000000, -10000, 10000, 15000000, -10000, 10000, 20000000, -10000, 10000, 25000000};
+        performanceTest(Algorithms::MERGE_SORT, "mergeSort", dataset, dataset_size, probs_per_test);
+        performanceTest(Algorithms::QUICK_SORT, "quickSort", dataset, dataset_size, probs_per_test);
+        performanceTest(Algorithms::COCKTAIL_SORT, "countingSort", dataset, dataset_size, probs_per_test);
+        performanceTest(Algorithms::RADIX_SORT, "radixSort", dataset, dataset_size, probs_per_test);
+        delete [] dataset; dataset = nullptr;
+    }else{
+        std::cout<<std::endl;
+        std::cout<<"USAGE:"<<std::endl<<"Pass \"correctnessTest\" or \"performanceTest\" as a command line parameter."<<std::endl<<std::endl;
+    }
     
-
     return 0;
 }
